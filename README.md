@@ -145,6 +145,83 @@ GROUP BY UID
 </code></pre>
 --------------------------------------
 
+## 문제 4번
+
+### 1. R 코드
+<pre><code>
+#csv파일 불러오기
+setwd("d:/")
+dutchpay_claim_detail<-read.csv("dutchpay_claim_detail.csv",header=T)
+dutchpay_claim_tx<-read.csv("dutchpay_claim_tx.csv",header=T)
+x_product<-read.csv("x_product.csv",header=T)
+x_transaction_history<-read.csv("x_transaction_history.csv",header=T)
+x_users<-read.csv("x_users.csv",header=T)
+
+
+# SQLDF 함수를 사용하기 위한 라이브러리
+library(sqldf)
+
+# SQLite 관련 함수를 사용하기 위한 라이브러리
+library(RSQLite)
+
+# SQLite DB 구축/연결하기
+con <- dbConnect(RSQLite::SQLite(), ":memory:")
+dbListTables(con)
+
+# 요청받은 유저별 응답수,요청수
+dutch_test1 <- sqldf("SELECT user_id
+			            ,cast(COUNT(DISTINCT SEND_TRANSACTION_EVENT_ID) as float) as send_cnt
+			            ,cast(COUNT(DISTINCT ID) as float) as claim_cnt
+	            FROM dutchpay_claim_detail
+            group by user_id")
+
+# 요청받은 유저별 응답률
+dutch_ratio <- sqldf("select a.*, (send_cnt/claim_cnt) as rt
+                from dutch_test1 a
+                where send_cnt <> 0
+              union
+              select a.*, 0 as rt
+                from dutch_test1 a
+                where send_cnt = 0")
+
+# 유저별 요청수
+claim_user <- sqldf("select user_id, sum(1) as claim_cnt
+                      from dutchpay_claim_tx
+                    group by user_id
+                    ")
+
+#요청받은 유저의 요청수 join
+anal_test <- sqldf("select aa.user_id as rcv_user_id
+                     ,aa.send_cnt
+                     ,aa.claim_cnt as rcv_cnt
+                     ,aa.rt
+                     ,case when bb.claim_cnt is null then 0 else bb.claim_cnt end as claim_cnt
+                from dutch_ratio aa
+                left join claim_user bb
+                       on aa.user_id = bb.user_id")
+
+anal_fnl<-sqldf("select rcv_user_id
+                       ,round(rt*10) as res_ratio
+                       ,claim_cnt
+                from anal_test
+                where not(res_ratio = 0
+                and claim_cnt=0)")
+
+
+#데이터 확인
+conf<-sqldf("select claim_cnt,sum(1) as cnt
+            from anal_test
+            group by claim_cnt")
+
+with(anal_fnl, cor(x=res_ratio, 
+                 y=claim_cnt, 
+                 use="complete.obs", 
+                method=c("spearman")))
+;
+</code></pre>
+
+-----------------------------------------
+
 ## 문제 5번
 
 ### 1. 데이터 추출
