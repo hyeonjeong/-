@@ -4,8 +4,7 @@
 ### 문제 3)
 
 * 데이터 준비
-<pre><code>
-/* 데이터 업로드 */
+<pre><code>/* 데이터 업로드 */
 
 -- 1) x_users.csv : 서비스 X의 유저 데이터
 
@@ -117,3 +116,4 @@ SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_tx; --982871
 SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
+* 
