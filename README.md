@@ -164,62 +164,62 @@ library(sqldf)
 # SQLite 관련 함수를 사용하기 위한 라이브러리
 library(RSQLite)
 
-# SQLite DB 구축/연결하기
-con <- dbConnect(RSQLite::SQLite(), ":memory:")
-dbListTables(con)
+# 요청한 고객의 요청수, 응답수
+claim_user<-sqldf("
+                  select claim_uid
+                        ,count(distinct claim_id) as claim_cnt
+                        ,count(distinct case when send_yn=1 then claim_id end) as send_cnt
+                    from (select aa.user_id as claim_uid
+                                 ,aa.id      as claim_id
+                                 ,max(case when bb.status='SEND' then 1 else 0 end) as send_yn
+                             from dutchpay_claim_tx aa
+                             inner join dutchpay_claim_detail bb
+                                     on aa.id = bb.remittance_claim_send_id
+                           group by aa.user_id, aa.id
+                          ) aaa
+                  group by claim_uid
+                  ")
 
-# 요청받은 유저별 응답수,요청수
-dutch_test1 <- sqldf("SELECT user_id
-			            ,cast(COUNT(DISTINCT SEND_TRANSACTION_EVENT_ID) as float) as send_cnt
-			            ,cast(COUNT(DISTINCT ID) as float) as claim_cnt
-	            FROM dutchpay_claim_detail
-            group by user_id")
+# 요청받은 고객의 응답수(서비스 사용수)
+send_user<-sqldf("select user_id as send_uid
+                        ,count(distinct SEND_TRANSACTION_EVENT_ID) as use_cnt
+                    from dutchpay_claim_detail
+                  group by user_id
+                  ")
 
-# 요청받은 유저별 응답률
-dutch_ratio <- sqldf("select a.*, (send_cnt/claim_cnt) as rt
-                from dutch_test1 a
-                where send_cnt <> 0
-              union
-              select a.*, 0 as rt
-                from dutch_test1 a
-                where send_cnt = 0")
+# 고객별 응답률, 서비스 사용수
+anal_table<-sqldf("select claim_uid
+                         ,(aa.send_cnt+0.00)/(aa.claim_cnt+0.00)  as send_rt
+                         ,bb.use_cnt
+                    from claim_user aa
+                      left join send_user bb
+                             on aa.claim_uid = send_uid")
 
-# 유저별 요청수
-claim_user <- sqldf("select user_id, sum(1) as claim_cnt
-                      from dutchpay_claim_tx
-                    group by user_id
-                    ")
-
-#요청받은 유저의 요청수 join
-anal_test <- sqldf("select aa.user_id as rcv_user_id
-                     ,aa.send_cnt
-                     ,aa.claim_cnt as rcv_cnt
-                     ,aa.rt
-                     ,case when bb.claim_cnt is null then 0 else bb.claim_cnt end as claim_cnt
-                from dutch_ratio aa
-                left join claim_user bb
-                       on aa.user_id = bb.user_id")
-
-anal_fnl<-sqldf("select rcv_user_id
-                       ,round(rt*10) as res_ratio
-                       ,claim_cnt
-                from anal_test
-                where not(res_ratio = 0
-                and claim_cnt=0)")
-
-
-#데이터 확인
-conf<-sqldf("select claim_cnt,sum(1) as cnt
-            from anal_test
-            group by claim_cnt")
-
-with(anal_fnl, cor(x=res_ratio, 
-                 y=claim_cnt, 
-                 use="complete.obs", 
-                method=c("spearman")))
-;
+# 고객별 응답률, 서비스 사용수의 상관분석
+cor.test(anal_table$send_rt,anal_table$use_cnt)
 </code></pre>
 
+
+### 2. 분석 결과
+<pre><code>
+	Pearson's product-moment correlation
+
+data:  anal_table$send_rt and anal_table$use_cnt
+t = 100.12, df = 315681, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.1720569 0.1788189
+sample estimates:
+    cor 
+0.17544
+</code></pre>
+
+
+### 2. 분석 결과
+<pre><code>
+피어슨 상관분석 결과, p-value가 0.05보다 작으므로 두 변수간의 상관이 없다는 귀무가설을 기각한다.
+하지만 상관계수가 0.18로 매우 약한 관련성을 가진다.
+</code></pre>
 -----------------------------------------
 
 ## 문제 5번
