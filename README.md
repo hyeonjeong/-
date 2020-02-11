@@ -1,8 +1,9 @@
 # 카카오페이 사전과제
 > 비즈니스분석가 사전과제
 
-### 문제 3
-* 데이터 준비
+### 3번 문제
+#### 3.0. 데이터 준비
+
 <pre><code>/* 데이터 업로드 */
 
 -- 1) x_users.csv : 서비스 X의 유저 데이터
@@ -116,8 +117,8 @@ SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
 
-* 데이터 추출 (3-1,3-2)
-<pre><code>-- 3-1. 누적 리워드 지급 10회 이상인 유저
+#### 3.1. 추출 쿼리
+<pre><code>-- 누적 리워드 지급 10회 이상인 유저
 SELECT COUNT(DISTINCT UID)
  FROM 
 (SELECT UID
@@ -129,8 +130,10 @@ SELECT COUNT(DISTINCT UID)
  WHERE RWD_CNT >= 10
 ;
 1407
+</code></pre>
 
--- 3-2. 누적 리워드 지급 5회 이상인 유저(3-1 대상유저와 중복 제거)
+#### 3.2. 추출 쿼리
+<pre><code>-- 누적 리워드 지급 5회 이상인 유저(3-1 대상 유저와 중복 제거)
 SELECT COUNT(DISTINCT UID)
 FROM 
 (SELECT UID
