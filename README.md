@@ -118,7 +118,7 @@ SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
 
-#### 3.1. 추출 쿼리
+### 3.1. 추출 쿼리
 <pre><code>-- 누적 리워드 지급 10회 이상인 유저
 SELECT COUNT(DISTINCT UID)
  FROM 
@@ -133,7 +133,7 @@ SELECT COUNT(DISTINCT UID)
 1407
 </code></pre>
 
-#### 3.2. 추출 쿼리
+### 3.2. 추출 쿼리
 <pre><code>-- 누적 리워드 지급 5회 이상인 유저(3-1 대상 유저와 중복 제거)
 SELECT COUNT(DISTINCT UID)
 FROM 
