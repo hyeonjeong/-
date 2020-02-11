@@ -110,10 +110,10 @@ row format delimited fields terminated by ','
 
 /* 데이터 확인 */
 
-SELECT SUM(1) FROM share_mns.lhj_x_users;								--28407
-SELECT SUM(1) FROM share_mns.lhj_x_product;							--298
-SELECT SUM(1) FROM share_mns.lhj_x_transaction_history;	--380782
-SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_tx;			--982871
-SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail;	--3413602
+SELECT SUM(1) FROM share_mns.lhj_x_users; --28407
+SELECT SUM(1) FROM share_mns.lhj_x_product; --298
+SELECT SUM(1) FROM share_mns.lhj_x_transaction_history; --380782
+SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_tx; --982871
+SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
