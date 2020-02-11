@@ -1,7 +1,7 @@
 # 카카오페이 사전과제
 > 비즈니스분석가 사전과제
 
-### 문제 3)
+### 문제 3
 
 * 데이터 준비
 <pre><code>/* 데이터 업로드 */
@@ -116,4 +116,29 @@ SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_tx; --982871
 SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
-* 
+* 데이터 추출 (3-1,3-2)
+<pre><code>-- 3-1. 누적 리워드 지급 10회 이상인 유저
+SELECT COUNT(DISTINCT UID)
+	FROM 
+	 (SELECT UID
+					,COUNT(DISTINCT CASE WHEN AMOUNT >= 100000 THEN SUBSTR(CREATED_AT,1,10) ELSE NULL END) AS RWD_CNT
+			FROM share_mns.lhj_x_transaction_history
+		 WHERE STATUS = 'COMPLETED'
+		GROUP BY UID
+		) AA
+ WHERE RWD_CNT >= 10
+;
+1407
+
+-- 3-2. 누적 리워드 지급 5회 이상인 유저(3-1 대상유저와 중복 제거)
+SELECT COUNT(DISTINCT UID)
+	FROM 
+	 (SELECT UID
+					,COUNT(DISTINCT CASE WHEN AMOUNT >= 100000 THEN SUBSTR(CREATED_AT,1,10) ELSE NULL END) AS RWD_CNT
+			FROM share_mns.lhj_x_transaction_history
+		 WHERE STATUS = 'COMPLETED'
+		GROUP BY UID
+		) AA
+ WHERE RWD_CNT BETWEEN 5 AND 9
+;
+2449
