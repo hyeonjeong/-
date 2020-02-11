@@ -198,5 +198,5 @@ GROUP BY CASE WHEN FST_DT >= '20191201' AND FST_DT <= '20191214' THEN '1.12/01_1
 ;
 </code></pre>
 
-![재방문률](https://user-images.githubusercontent.com/7845923/74233648-6e156c00-4d0e-11ea-8f11-f8d3511bc06d.PNG)
+![재방문률](https://user-images.githubusercontent.com/7845923/74233648-6e156c00-4d0e-11ea-8f11-f8d3511bc06d.PNG){: width="60%" height="40%"}
 
