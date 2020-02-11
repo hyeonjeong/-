@@ -1,9 +1,9 @@
 # 카카오페이 사전과제
 > 비즈니스분석가 사전과제
-
-## 문제 1)
-
-> 데이터 준비
+---------------------------------------
+## 문제 3)
+---------------------------------------
+### 데이터 준비
 <pre><code>
 /* 데이터 업로드 */
 
@@ -116,3 +116,4 @@ SELECT SUM(1) FROM share_mns.lhj_x_transaction_history;	--380782
 SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_tx;			--982871
 SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail;	--3413602
 </code></pre>
+
