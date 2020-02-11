@@ -1,13 +1,18 @@
 # 카카오페이 사전과제
 > 비즈니스분석가 사전과제
 
+<pre><code>
+</code></pre>
+## 3.
+<pre><code>
+서비스 X는 4월 1일부터 5월 31일까지 매일 종료된 상품에 대하여 해당 상품을 10만원 이상
+거래완료한 (최종거래진행상태가 COMPLETED인) 유저에게 일 1회의 리워드를 지급하고
+있습니다. 5월 31일까지의 누적 리워드 지급 횟수가 5회 이상, 10회 이상인 유저에게 특별
+리워드를 지급하려 합니다.
+</code></pre>
 
-## 3번 문제
-
-### 3.0. 데이터 준비
-
-<pre><code>/* 데이터 업로드 */
-
+#### 3.1. 데이터 업로드
+<pre><code>
 -- 1) x_users.csv : 서비스 X의 유저 데이터
 
 drop table share_mns.lhj_x_users;
@@ -109,8 +114,7 @@ row format delimited fields terminated by ','
 >$ /app/hdfs/bin/hadoop fs -copyFromLocal /home/pp61123/upload/lhj_dutchpay_claim_detail.csv /user/hive/warehouse/share_mns.db/lhj_dutchpay_claim_detail  
 
 
-/* 데이터 확인 */
-
+-- 데이터 확인
 SELECT SUM(1) FROM share_mns.lhj_x_users; --28407
 SELECT SUM(1) FROM share_mns.lhj_x_product; --298
 SELECT SUM(1) FROM share_mns.lhj_x_transaction_history; --380782
@@ -119,8 +123,8 @@ SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
 
-### 3.1. 추출 쿼리
-<pre><code>-- 누적 리워드 지급 10회 이상인 유저
+### 3.2. SQL 쿼리
+<pre><code>-- 3-1) 누적 리워드 지급 10회 이상인 유저
 SELECT COUNT(DISTINCT UID)
  FROM 
 (SELECT UID
@@ -132,10 +136,8 @@ SELECT COUNT(DISTINCT UID)
  WHERE RWD_CNT >= 10
 ;
 1407
-</code></pre>
 
-### 3.2. 추출 쿼리
-<pre><code>-- 누적 리워드 지급 5회 이상인 유저(3-1 대상 유저와 중복 제거)
+<pre><code>-- 3-2) 누적 리워드 지급 5회 이상인 유저(3-1 대상 유저와 중복 제거)
 SELECT COUNT(DISTINCT UID)
 FROM 
 (SELECT UID
