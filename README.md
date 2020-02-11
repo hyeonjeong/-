@@ -11,7 +11,7 @@
 리워드를 지급하려 합니다.
 </code></pre>
 
-#### * 데이터 업로드
+### 1. 데이터 업로드
 <pre><code>
 -- 1) x_users.csv : 서비스 X의 유저 데이터
 
@@ -123,7 +123,7 @@ SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
 
-### 3.2. SQL 쿼리
+### 2. SQL 쿼리
 <pre><code>-- 3-1) 누적 리워드 지급 10회 이상인 유저
 SELECT COUNT(DISTINCT UID)
  FROM 
@@ -152,9 +152,10 @@ GROUP BY UID
 </code></pre>
 
 
-## 5번 문제
+## 문제 5번
 
-### 추출 쿼리
+### 1. SQL 쿼리
+* 사용한 테이블은 문제 3번에서 업로드한 테이블을 그대로 사용했음.
 
 <pre><code>-- 사용자의 더치페이 재사용률을 분석
 SELECT CASE WHEN FST_DT >= '20191201' AND FST_DT <= '20191214' THEN '1.12/01_12/14'
