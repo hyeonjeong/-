@@ -4,12 +4,6 @@
 <pre><code>
 </code></pre>
 ## 문제 3번
-<pre><code>
-서비스 X는 4월 1일부터 5월 31일까지 매일 종료된 상품에 대하여 해당 상품을 10만원 이상
-거래완료한 (최종거래진행상태가 COMPLETED인) 유저에게 일 1회의 리워드를 지급하고
-있습니다. 5월 31일까지의 누적 리워드 지급 횟수가 5회 이상, 10회 이상인 유저에게 특별
-리워드를 지급하려 합니다.
-</code></pre>
 
 ### 1. 데이터 업로드
 <pre><code>
@@ -123,7 +117,7 @@ SELECT SUM(1) FROM share_mns.lhj_dutchpay_claim_detail; --3413602
 </code></pre>
 
 
-### 2. SQL 쿼리
+### 2. 데이터 추출
 <pre><code>-- 3-1) 누적 리워드 지급 10회 이상인 유저
 SELECT COUNT(DISTINCT UID)
  FROM 
@@ -154,8 +148,8 @@ GROUP BY UID
 
 ## 문제 5번
 
-### 1. SQL 쿼리
-* 사용한 테이블은 문제 3번에서 업로드한 테이블을 그대로 사용했음.
+### 1. 데이터 추출
+* 테이블은 문제 3번에서 업로드한 테이블로 사용.
 
 <pre><code>-- 사용자의 더치페이 재사용률을 분석
 SELECT CASE WHEN FST_DT >= '20191201' AND FST_DT <= '20191214' THEN '1.12/01_12/14'
@@ -203,3 +197,5 @@ GROUP BY CASE WHEN FST_DT >= '20191201' AND FST_DT <= '20191214' THEN '1.12/01_1
 	      WHEN FST_DT >= '20200216' AND FST_DT <= '20200229' THEN '7.02/16_02/29' END
 ;
 </code></pre>
+
+![재방문율 분석](./C/Users/owner/Downloads/재방문률.png)
